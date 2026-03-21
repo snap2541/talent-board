@@ -1,0 +1,773 @@
+@import './themes.css';
+@import './animations.css';
+@import './board.css';
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+html,
+body,
+#root {
+  height: 100%;
+  width: 100%;
+}
+
+body {
+  font-family: 'Nanum Gothic', sans-serif;
+  background: #fff9fc;
+  color: #444;
+  min-height: 100vh;
+  overflow-x: hidden;
+}
+
+/* ========== 페이지 레이아웃 ========== */
+.page {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  transition: background 0.4s;
+}
+
+.page-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 12px 16px;
+  background: rgba(255, 255, 255, 0.85);
+  backdrop-filter: blur(8px);
+  box-shadow: 0 2px 12px rgba(0, 0, 0, 0.08);
+  position: sticky;
+  top: 0;
+  z-index: 10;
+}
+
+.page-title {
+  font-family: 'Gaegu', cursive;
+  font-size: 1.4rem;
+  font-weight: 700;
+  color: #ff6b9d;
+  text-shadow: 1px 1px 0 #ffd6e0;
+}
+
+.page-header__actions {
+  display: flex;
+  gap: 8px;
+  align-items: center;
+}
+
+.btn-nav {
+  background: #fff0f5;
+  border: 2px solid #ffb3c6;
+  border-radius: 20px;
+  padding: 6px 14px;
+  font-family: 'Nanum Gothic', sans-serif;
+  font-size: 0.85rem;
+  font-weight: 700;
+  color: #c77dff;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.btn-nav:hover {
+  background: #ffd6e0;
+  transform: scale(1.05);
+}
+
+/* ========== 공통 버튼 ========== */
+.btn {
+  border: none;
+  border-radius: 24px;
+  padding: 12px 24px;
+  font-family: 'Nanum Gothic', sans-serif;
+  font-weight: 800;
+  font-size: 1rem;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.btn:active {
+  transform: scale(0.97);
+}
+
+.btn--primary {
+  background: linear-gradient(135deg, #ff8fab, #c77dff);
+  color: white;
+  box-shadow: 0 4px 15px rgba(199, 125, 255, 0.4);
+}
+
+.btn--primary:hover {
+  box-shadow: 0 6px 20px rgba(199, 125, 255, 0.5);
+  transform: translateY(-2px);
+}
+
+.btn--primary:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+  transform: none;
+}
+
+.btn--secondary {
+  background: #f0f0f0;
+  color: #888;
+}
+
+.btn--large {
+  font-size: 1.1rem;
+  padding: 14px 32px;
+}
+
+/* ========== TOAST ========== */
+.toast {
+  position: fixed;
+  top: 70px;
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 100;
+  padding: 12px 24px;
+  border-radius: 24px;
+  font-weight: 700;
+  font-size: 1rem;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15);
+  animation: toastSlideIn 0.3s ease;
+  white-space: nowrap;
+  max-width: 90vw;
+}
+
+.toast--info {
+  background: #fff;
+  border: 2px solid #90e0ef;
+  color: #333;
+}
+
+.toast--success {
+  background: linear-gradient(135deg, #ff8fab, #c77dff);
+  color: white;
+}
+
+.toast--error {
+  background: #ff6b6b;
+  color: white;
+}
+
+/* ========== CONFETTI ========== */
+.confetti-container {
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  z-index: 200;
+  overflow: hidden;
+}
+
+/* ========== SCAN PAGE ========== */
+.scan-page__main {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 20px 16px;
+}
+
+.scan-page__scanner-area {
+  width: 100%;
+  max-width: 400px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 16px;
+}
+
+.scan-page__intro {
+  text-align: center;
+}
+
+.scan-page__star-row {
+  font-size: 1.6rem;
+  margin-bottom: 8px;
+  animation: starPulse 2s ease-in-out infinite;
+}
+
+.scan-page__prompt {
+  font-family: 'Gaegu', cursive;
+  font-size: 1.4rem;
+  color: #c77dff;
+  line-height: 1.5;
+}
+
+.qr-scanner-wrapper {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 12px;
+}
+
+.qr-reader {
+  width: 100% !important;
+  max-width: 340px;
+  border-radius: 20px;
+  overflow: hidden;
+  border: 3px solid #ffb3c6;
+  box-shadow: 0 8px 32px rgba(255, 139, 171, 0.3);
+}
+
+/* html5-qrcode 내부 border 스타일 오버라이드 */
+#qr-reader video {
+  border-radius: 16px;
+}
+
+#qr-reader__scan_region {
+  border-radius: 16px;
+}
+
+.qr-scanner__hint {
+  font-size: 1rem;
+  color: #888;
+  text-align: center;
+}
+
+.qr-scanner__error {
+  background: #fff0f0;
+  border: 2px solid #ffb3b3;
+  border-radius: 12px;
+  padding: 12px 20px;
+  color: #e05;
+  text-align: center;
+}
+
+/* ========== POINT INPUT ========== */
+.point-input {
+  width: 100%;
+  max-width: 420px;
+  background: white;
+  border-radius: 24px;
+  padding: 24px;
+  box-shadow: 0 8px 40px rgba(0, 0, 0, 0.12);
+  animation: fadeInUp 0.4s ease;
+}
+
+.point-input__header {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  margin-bottom: 20px;
+}
+
+.point-input__avatar {
+  width: 80px;
+  height: 80px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+  flex-shrink: 0;
+  font-size: 2.5rem;
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.15);
+}
+
+.point-input__avatar img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.point-input__name {
+  font-family: 'Gaegu', cursive;
+  font-size: 1.5rem;
+  font-weight: 700;
+  color: var(--color-primary, #ff8fab);
+}
+
+.point-input__current {
+  font-size: 0.95rem;
+  color: #888;
+}
+
+.point-input__current strong {
+  color: var(--color-primary, #ff8fab);
+  font-size: 1.1rem;
+}
+
+.point-input__label {
+  font-size: 1rem;
+  font-weight: 700;
+  margin-bottom: 12px;
+  color: #555;
+}
+
+.point-input__quick {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 10px;
+  margin-bottom: 14px;
+}
+
+.btn-quick {
+  background: #f8f0ff;
+  border: 2px solid #e0b8ff;
+  border-radius: 16px;
+  padding: 14px 0;
+  font-family: 'Gaegu', cursive;
+  font-size: 1.3rem;
+  font-weight: 700;
+  color: #9d4edd;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.btn-quick:hover {
+  background: #ead9ff;
+  transform: scale(1.08);
+}
+
+.btn-quick--selected {
+  background: linear-gradient(135deg, #c77dff, #ff8fab);
+  color: white;
+  border-color: transparent;
+  transform: scale(1.08);
+  box-shadow: 0 4px 12px rgba(199, 125, 255, 0.4);
+}
+
+.point-input__custom input,
+.point-input__note input {
+  width: 100%;
+  border: 2px solid #e8e8e8;
+  border-radius: 16px;
+  padding: 12px 16px;
+  font-family: 'Nanum Gothic', sans-serif;
+  font-size: 1rem;
+  outline: none;
+  transition: border-color 0.2s;
+  margin-bottom: 10px;
+}
+
+.point-input__custom input:focus,
+.point-input__note input:focus {
+  border-color: #c77dff;
+}
+
+.point-input__actions {
+  display: flex;
+  gap: 10px;
+  margin-top: 8px;
+}
+
+.point-input__actions .btn {
+  flex: 1;
+}
+
+/* ========== SCAN DONE ========== */
+.scan-page__done {
+  text-align: center;
+  padding: 40px 20px;
+  animation: fadeInUp 0.4s ease;
+}
+
+.scan-page__done-emoji {
+  font-size: 5rem;
+  animation: bounce 0.6s ease infinite alternate;
+}
+
+.scan-page__done p {
+  font-family: 'Gaegu', cursive;
+  font-size: 1.6rem;
+  color: #c77dff;
+  margin-top: 16px;
+}
+
+.scan-page__done-sub {
+  font-size: 1rem !important;
+  color: #aaa !important;
+  margin-top: 8px;
+}
+
+/* ========== COIN RAIN ========== */
+.coin-rain-container {
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  z-index: 202;
+  overflow: hidden;
+}
+
+/* ========== BOARD PAGE ========== */
+.board-page__main {
+  flex: 1;
+  padding: 12px;
+  display: flex;
+  flex-direction: column;
+}
+
+.board-page__layout {
+  display: flex;
+  gap: 12px;
+  align-items: flex-start;
+  width: 100%;
+}
+
+/* 캐릭터 사이드 패널 */
+.board-page__side {
+  flex: 0 0 200px;
+  width: 200px;
+  position: sticky;
+  top: 60px;
+  border-radius: 20px;
+  overflow: hidden;
+  box-shadow: 0 6px 24px rgba(0, 0, 0, 0.12);
+  display: flex;
+  flex-direction: column;
+  min-height: 300px;
+}
+
+.char-bg {
+  position: absolute;
+  inset: 0;
+  background-size: cover;
+  background-position: center top;
+  opacity: 0.18;
+  pointer-events: none;
+  z-index: 0;
+}
+
+.char-bg--sophie {
+  background-image: url('/images/sophie-bg.png');
+  background-color: #ffd6e0;
+}
+
+.char-bg--cinna {
+  background-image: url('/images/cinnamoroll-bg.png');
+  background-color: #d6f0ff;
+}
+
+.board-page__side--sophie {
+  background: linear-gradient(160deg, #fff0f5, #ffd6e8);
+  border: 2px solid #ff8fab;
+}
+
+.board-page__side--cinna {
+  background: linear-gradient(160deg, #f0f8ff, #c8e8ff);
+  border: 2px solid #90c8ef;
+}
+
+.board-page__side .level-badge {
+  position: relative;
+  z-index: 1;
+  width: 100%;
+  max-width: 100%;
+}
+
+.board-page__board-container {
+  flex: 1;
+  min-width: 0;
+  overflow-x: auto;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.board-page__footer {
+  padding: 8px 0 12px;
+  display: flex;
+  justify-content: center;
+}
+
+.board-page__loading,
+.board-page__error {
+  text-align: center;
+  padding: 60px 20px;
+  font-size: 1.2rem;
+  color: #aaa;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 16px;
+}
+
+.loading-spinner {
+  font-size: 2.5rem;
+  animation: spin 1.5s linear infinite;
+}
+
+/* ========== LEVEL BADGE ========== */
+.level-badge {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  background: rgba(255, 255, 255, 0.88);
+  border-radius: 20px;
+  padding: 14px 18px;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+  border: 3px solid var(--color-primary, #ff8fab);
+  transition: all 0.3s;
+  min-width: 200px;
+  flex: 1;
+  max-width: 340px;
+}
+
+/* 사이드 패널용 세로 카드 */
+.level-badge--large {
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  padding: 20px 14px;
+  max-width: 100%;
+  min-width: 0;
+  border-radius: 0;
+  border: none;
+  box-shadow: none;
+  background: transparent;
+}
+
+.level-badge--levelup {
+  animation: levelUpPop 0.8s ease;
+}
+
+.level-badge__avatar {
+  width: 70px;
+  height: 70px;
+  border-radius: 50%;
+  overflow: hidden;
+  flex-shrink: 0;
+  border: 3px solid var(--color-primary, #ff8fab);
+  background: var(--color-secondary, #ffd6e0);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 2rem;
+}
+
+.level-badge--large .level-badge__avatar {
+  width: 150px;
+  height: 150px;
+  font-size: 3.5rem;
+  border-width: 4px;
+  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.2);
+}
+
+.level-badge__avatar img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.level-badge__avatar-fallback {
+  width: 100%;
+  height: 100%;
+  align-items: center;
+  justify-content: center;
+  font-size: 3rem;
+  border-radius: 50%;
+}
+
+.level-badge__info {
+  flex: 1;
+}
+
+.level-badge--large .level-badge__info {
+  flex: none;
+  width: 100%;
+}
+
+.level-badge__name {
+  font-family: 'Gaegu', cursive;
+  font-size: 1.2rem;
+  font-weight: 700;
+  color: var(--color-primary, #ff8fab);
+}
+
+.level-badge--large .level-badge__name {
+  font-size: 1.3rem;
+  margin-top: 10px;
+}
+
+.level-badge__level {
+  font-size: 0.9rem;
+  color: #888;
+  margin: 2px 0;
+}
+
+.level-badge__emoji {
+  margin-right: 4px;
+}
+
+.level-badge__points-num {
+  font-size: 1.4rem;
+  font-weight: 800;
+  color: var(--color-primary, #ff8fab);
+}
+
+.level-badge--large .level-badge__points-num {
+  font-size: 2rem;
+}
+
+.level-badge__progress-bar {
+  margin-top: 6px;
+  height: 8px;
+  background: var(--color-secondary, #ffd6e0);
+  border-radius: 4px;
+  overflow: hidden;
+}
+
+.level-badge__progress-fill {
+  height: 100%;
+  background: linear-gradient(90deg, var(--color-primary, #ff8fab), var(--color-accent, #c77dff));
+  border-radius: 4px;
+  transition: width 0.6s ease;
+}
+
+.level-badge__next-hint {
+  font-size: 0.72rem;
+  color: #aaa;
+  margin-top: 3px;
+}
+
+.level-badge__max {
+  font-size: 0.85rem;
+  color: #f4a261;
+  font-weight: 700;
+  margin-top: 4px;
+}
+
+/* ========== ADMIN PAGE ========== */
+.admin-page__main {
+  flex: 1;
+  padding: 24px 16px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 20px;
+}
+
+.admin-page__desc {
+  color: #888;
+  font-size: 1rem;
+}
+
+.admin-page__cards {
+  display: flex;
+  gap: 24px;
+  flex-wrap: wrap;
+  justify-content: center;
+}
+
+.qr-card {
+  background: white;
+  border-radius: 24px;
+  padding: 24px;
+  text-align: center;
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+  border: 3px solid var(--color-primary, #ff8fab);
+  width: 240px;
+}
+
+.qr-card__name {
+  font-family: 'Gaegu', cursive;
+  font-size: 1.5rem;
+  font-weight: 700;
+  color: var(--color-primary, #ff8fab);
+  margin-bottom: 4px;
+}
+
+.qr-card__emoji {
+  font-size: 3rem;
+  margin-bottom: 12px;
+}
+
+.qr-card__token-wrap {
+  width: 130px;
+  height: 130px;
+  border-radius: 50%;
+  border: 4px solid var(--color-primary, #ff8fab);
+  box-shadow: 0 0 0 4px color-mix(in srgb, var(--color-primary, #ff8fab) 20%, transparent),
+    0 4px 16px color-mix(in srgb, var(--color-primary, #ff8fab) 30%, transparent);
+  background: color-mix(in srgb, var(--color-primary, #ff8fab) 10%, white);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: 0 auto 12px;
+  overflow: hidden;
+}
+
+.qr-card__token-img {
+  width: 130px;
+  height: 130px;
+  object-fit: contain;
+}
+
+.qr-card__svg svg {
+  width: 180px;
+  height: 180px;
+}
+
+.qr-card__hint {
+  margin-top: 12px;
+  font-size: 0.85rem;
+  color: #aaa;
+}
+
+/* ========== 인쇄 ========== */
+@media print {
+  .no-print {
+    display: none !important;
+  }
+
+  .page-header {
+    display: none;
+  }
+
+  .admin-page__cards {
+    gap: 48px;
+  }
+
+  .qr-card {
+    box-shadow: none;
+    border: 2px solid #ccc;
+  }
+}
+
+/* ========== 반응형 ========== */
+@media (max-width: 700px) {
+  .board-page__layout {
+    flex-direction: column;
+    align-items: center;
+  }
+
+  .board-page__side {
+    position: static;
+    width: 100%;
+    flex: none;
+    flex-direction: row;
+    min-height: auto;
+    border-radius: 20px;
+    overflow: hidden;
+  }
+
+  .board-page__side--sophie,
+  .board-page__side--cinna {
+    border: 2px solid;
+  }
+
+  .level-badge--large {
+    flex-direction: row;
+    text-align: left;
+    padding: 14px;
+  }
+
+  .level-badge--large .level-badge__avatar {
+    width: 80px;
+    height: 80px;
+  }
+
+  .level-badge--large .level-badge__name {
+    margin-top: 0;
+  }
+
+  .point-input__quick {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}

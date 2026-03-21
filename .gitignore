@@ -1,0 +1,5 @@
+node_modules/
+server/data/talent.db
+server/.env
+client/.env.local
+dist/

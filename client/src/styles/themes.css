@@ -1,0 +1,17 @@
+/* 핑크 테마 (Sophie Ruby) */
+.theme-pink {
+  --color-primary:   #ff8fab;
+  --color-secondary: #ffd6e0;
+  --color-accent:    #c77dff;
+  --color-bg:        #fff0f5;
+  background: linear-gradient(160deg, #fff0f5 0%, #f8e8ff 100%);
+}
+
+/* 블루 테마 (Cinnamoroll) */
+.theme-blue {
+  --color-primary:   #48cae4;
+  --color-secondary: #caf0f8;
+  --color-accent:    #90e0ef;
+  --color-bg:        #f0f8ff;
+  background: linear-gradient(160deg, #f0f8ff 0%, #e8f9ff 100%);
+}
